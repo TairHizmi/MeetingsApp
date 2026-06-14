@@ -28,9 +28,8 @@ const AddMeeting: React.FC<AddMeetingProps> = ({ onNavigate }) => {
         e.preventDefault();
         setError('');
 
-        // 1. בדיקה שכל השדות מלאים
         if (!groupId || !startTime || !endTime || !description || !roomName) {
-            setError('כל השדות הינם שדות חובה!');
+            setError('All fields are required.');
             return;
         }
 
@@ -38,22 +37,20 @@ const AddMeeting: React.FC<AddMeetingProps> = ({ onNavigate }) => {
         const end = new Date(endTime).getTime();
         const now = new Date().getTime();
 
-        // 2. אין לאפשר פגישה בעלת זמן התחלה בעבר
         if (start < now) {
-            setError('אין לאפשר הוספת פגישה בעלת זמן התחלה בעבר!');
+            setError('You cannot add a meeting that starts in the past.');
             return;
         }
 
-        // 3. אין לאפשר זמן התחלה המאוחר מזמן הסיום
         if (start > end) {
-            setError('זמן ההתחלה אינו יכול להיות מאוחר מזמן הסיום!');
+            setError('Start time cannot be later than end time.');
             return;
         }
 
-        // שליחה ל-API
+        // Send data to the API
         const newMeeting = {
             group_id: parseInt(groupId),
-            start_time: startTime.replace('T', ' ') + ':00', // התאמה לפורמט MySQL
+            start_time: startTime.replace('T', ' ') + ':00', // Match MySQL datetime format
             end_time: endTime.replace('T', ' ') + ':00',
             description,
             room_name: roomName
@@ -65,43 +62,43 @@ const AddMeeting: React.FC<AddMeetingProps> = ({ onNavigate }) => {
             body: JSON.stringify(newMeeting)
         })
         .then(() => {
-            alert('הפגישה נוספה בהצלחה!');
+            alert('Meeting added successfully!');
             onNavigate('meetings');
         })
-        .catch(err => setError(err.message));
+        .catch(() => setError('Could not save the meeting. Please try again.'));
     };
 
     return (
-        <div>
-            <h1>הוספת פגישה חדשה</h1>
+        <div className="page-card">
+            <h1>Add a New Meeting</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>קבוצת פיתוח: </label>
+                    <label>Development Group: </label>
                     <select value={groupId} onChange={e => setGroupId(e.target.value)}>
-                        <option value="">-- בחר קבוצה --</option>
+                        <option value="">-- Select a group --</option>
                         {groups.map(g => (
                             <option key={g.group_id} value={g.group_id}>{g.group_name}</option>
                         ))}
                     </select>
                 </div>
                 <div>
-                    <label>זמן התחלה: </label>
+                    <label>Start Time: </label>
                     <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} />
                 </div>
                 <div>
-                    <label>זמן סיום: </label>
+                    <label>End Time: </label>
                     <input type="datetime-local" value={endTime} onChange={e => setEndTime(e.target.value)} />
                 </div>
                 <div>
-                    <label>תיאור הפגישה: </label>
+                    <label>Meeting Description: </label>
                     <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
                 </div>
                 <div>
-                    <label>שם החדר: </label>
+                    <label>Room Name: </label>
                     <input type="text" value={roomName} onChange={e => setRoomName(e.target.value)} />
                 </div>
-                <button type="submit">שמור פגישה</button>
+                <button type="submit">Save Meeting</button>
             </form>
         </div>
     );

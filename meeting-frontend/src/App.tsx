@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';
 import Home from './components/Home';
 import About from './components/About';
 import MeetingsList from './components/MeetingsList';
@@ -15,23 +16,24 @@ const App: React.FC = () => {
     };
 
     return (
-        <div>
-            {/* תפריט ניווט פשוט ללא עיצוב */}
-            <nav style={{ padding: '10px', background: '#eee' }}>
-                <button onClick={() => navigate('home')}>דף הבית</button> | 
-                <button onClick={() => navigate('about')}>אודות</button> | 
-                <button onClick={() => navigate('meetings')}>הצגת פגישות</button> | 
-                <button onClick={() => navigate('add-meeting')}>הוספת פגישה</button>
+        <div className="app-shell">
+            <nav className="topbar">
+                <div className="brand">MeetingFlow</div>
+                <div className="nav-group">
+                    <button className="nav-button" onClick={() => navigate('home')}>Home</button>
+                    <button className="nav-button" onClick={() => navigate('about')}>About</button>
+                    <button className="nav-button" onClick={() => navigate('meetings')}>Meetings</button>
+                    <button className="nav-button" onClick={() => navigate('add-meeting')}>Add Meeting</button>
+                </div>
             </nav>
 
-            <hr />
-
-            {/* רינדור מותנה של הדפים לפי ה-State */}
-            {currentPage === 'home' && <Home onNavigate={navigate} />}
+            <main className="page-frame">
+                {currentPage === 'home' && <Home />}
             {currentPage === 'about' && <About />}
             {currentPage === 'meetings' && <MeetingsList onNavigate={navigate} />}
-            {currentPage === 'add-meeting' && <AddMeeting onNavigate={navigate} />}
-            {currentPage === 'update-meeting' && <UpdateMeeting meetingData={sharedData} onNavigate={navigate} />}
+                {currentPage === 'add-meeting' && <AddMeeting onNavigate={navigate} />}
+                {currentPage === 'update-meeting' && <UpdateMeeting meetingData={sharedData} onNavigate={navigate} />}
+            </main>
         </div>
     );
 };

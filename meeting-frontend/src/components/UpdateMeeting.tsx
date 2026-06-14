@@ -12,7 +12,7 @@ const UpdateMeeting: React.FC<UpdateMeetingProps> = ({ meetingData, onNavigate }
     const [roomName, setRoomName] = useState(meetingData?.room_name || '');
     const [error, setError] = useState('');
 
-    // פורמט תאריך מתאים ל-input datetime-local
+    // Format date for the datetime-local input
     useEffect(() => {
         if (meetingData) {
             const formatForInput = (dateStr: string) => {
@@ -30,16 +30,15 @@ const UpdateMeeting: React.FC<UpdateMeetingProps> = ({ meetingData, onNavigate }
         setError('');
 
         if (!startTime || !endTime || !description || !roomName) {
-            setError('כל השדות הינם שדות חובה!');
+            setError('All fields are required.');
             return;
         }
 
         const start = new Date(startTime).getTime();
         const end = new Date(endTime).getTime();
 
-        // אין לאפשר עדכון פגישה בעלת זמן התחלה המאוחר מזמן הסיום
         if (start > end) {
-            setError('זמן ההתחלה אינו יכול להיות מאוחר מזמן הסיום!');
+            setError('Start time cannot be later than end time.');
             return;
         }
 
@@ -57,34 +56,34 @@ const UpdateMeeting: React.FC<UpdateMeetingProps> = ({ meetingData, onNavigate }
             body: JSON.stringify(updatedMeeting)
         })
         .then(() => {
-            alert('הפגישה עודכנה בהצלחה!');
+            alert('Meeting updated successfully!');
             onNavigate('meetings');
         })
-        .catch(err => setError(err.message));
+        .catch(() => setError('Could not update the meeting. Please try again.'));
     };
 
     return (
-        <div>
-            <h1>עדכון פגישה קיימת</h1>
+        <div className="page-card">
+            <h1>Update an Existing Meeting</h1>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleUpdate}>
                 <div>
-                    <label>זמן התחלה: </label>
+                    <label>Start Time: </label>
                     <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} />
                 </div>
                 <div>
-                    <label>זמן סיום: </label>
+                    <label>End Time: </label>
                     <input type="datetime-local" value={endTime} onChange={e => setEndTime(e.target.value)} />
                 </div>
                 <div>
-                    <label>תיאור הפגישה: </label>
+                    <label>Meeting Description: </label>
                     <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
                 </div>
                 <div>
-                    <label>שם החדר: </label>
+                    <label>Room Name: </label>
                     <input type="text" value={roomName} onChange={e => setRoomName(e.target.value)} />
                 </div>
-                <button type="submit">עדכן פגישה</button>
+                <button type="submit">Update Meeting</button>
             </form>
         </div>
     );

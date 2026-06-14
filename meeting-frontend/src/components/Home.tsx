@@ -1,16 +1,20 @@
 import React from 'react';
 
-interface HomeProps {
-    onNavigate: (page: string) => void;
-}
-
-const Home: React.FC<HomeProps> = ({ onNavigate }) => {
+const Home: React.FC = () => {
     return (
-        <div>
-            <h1>מערכת ניהול פגישות לחברות הייטק</h1>
-            <p>מערכת זו מאפשרת לקבוצות הפיתוח השונות בחברה לנהל, לתאם, לעדכן ולמחוק פגישות בחדרי הדיונים השונים בצורה יעילה ומסודרת.</p>
-            {/* ודאי שיש לך תמונה בשם meeting.png באותה תיקיית מקור או השתמשי בקישור זמני */}
-            <img src="meeting.png" alt="Meetings Management" width="300" />
+        <div className="page-card home-hero">
+            <div className="home-copy">
+                <h1>Meeting Management System</h1>
+                <h2 className="home-subtitle">for Tech Companies</h2>
+                <p>This system helps development teams organize, coordinate, update, and remove meetings in a clear and efficient way.</p>
+            </div>
+            <div className="home-logo-wrap">
+                <img
+                    src="/meeting_flow_logo_centered.svg"
+                    alt="MeetingFlow logo"
+                    className="home-logo"
+                />
+            </div>
         </div>
     );
 };
